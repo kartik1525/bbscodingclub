@@ -21,7 +21,7 @@ export function CommunityWorld() {
           </div>
 
           <div className="flex-1 flex items-center justify-center">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12 relative w-full">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-12 md:gap-8 relative w-full">
               
               <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden lg:block" style={{ filter: 'drop-shadow(0 0 5px rgba(166,124,66,0.3))' }}>
                 <path d="M 10% 50% L 30% 30% L 50% 60% L 70% 40% L 90% 50%" stroke="rgba(166, 124, 66, 0.2)" strokeWidth="1" fill="none" vectorEffect="non-scaling-stroke" />
@@ -30,8 +30,8 @@ export function CommunityWorld() {
               {members.map((member, index) => (
                 <div 
                   key={member.id} 
-                  className={`relative group cursor-pointer flex flex-col items-center z-10 animate-float`}
-                  style={{ animationDelay: `${index * 0.5}s`, transform: `translateY(${index % 2 === 0 ? '0' : '40px'})` }}
+                  className={`relative group cursor-pointer flex flex-col items-center z-10 animate-float ${index % 2 !== 0 ? 'md:translate-y-10' : ''}`}
+                  style={{ animationDelay: `${index * 0.5}s` }}
                   onClick={() => openObject(member.id)}
                 >
                   <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-antique-gold/30 group-hover:border-antique-gold/80 transition-all duration-500 mb-6 relative shadow-lg">
@@ -49,7 +49,7 @@ export function CommunityWorld() {
 
         <div className={`fixed inset-0 z-50 bg-space-dark/95 backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col items-center justify-center ${activeObject ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
           {activeMember && (
-            <div className="max-w-3xl w-full p-8 md:p-16 flex flex-col items-center text-center relative overflow-y-auto max-h-screen">
+            <div className="max-w-3xl w-full p-8 pt-32 md:p-16 md:pt-40 flex flex-col items-center text-center relative overflow-y-auto max-h-screen scrollbar-none">
               <button 
                 onClick={closeObject}
                 className="absolute top-8 left-8 md:top-12 md:left-12 group flex items-center gap-3 font-sans text-[10px] tracking-[0.2em] text-parchment hover:text-ivory transition-colors duration-300"

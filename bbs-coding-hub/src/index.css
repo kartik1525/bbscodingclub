@@ -1,14 +1,36 @@
 @import "tailwindcss";
 @plugin "tailwind-scrollbar";
 
+:root {
+  /* DARK THEME */
+  --theme-bg-primary: #120F0C;
+  --theme-bg-secondary: #211A15;
+  --theme-text-primary: #F3E9D2;
+  --theme-text-secondary: #D8C7A5;
+  --theme-accent: #A67C42;
+  --theme-accent-alt: #6B2E2E;
+  --theme-brown: #5A3825;
+}
+
+[data-theme="light"] {
+  /* LIGHT THEME */
+  --theme-bg-primary: #F5EFEB;
+  --theme-bg-secondary: #EADCD1;
+  --theme-text-primary: #211A15;
+  --theme-text-secondary: #5A3825;
+  --theme-accent: #8A6434;
+  --theme-accent-alt: #8C4040;
+  --theme-brown: #3A2215;
+}
+
 @theme {
-  --color-space-dark: #120F0C;
-  --color-space-secondary: #211A15;
-  --color-ivory: #F3E9D2;
-  --color-parchment: #D8C7A5;
-  --color-antique-gold: #A67C42;
-  --color-burgundy: #6B2E2E;
-  --color-secondary-brown: #5A3825;
+  --color-space-dark: var(--theme-bg-primary);
+  --color-space-secondary: var(--theme-bg-secondary);
+  --color-ivory: var(--theme-text-primary);
+  --color-parchment: var(--theme-text-secondary);
+  --color-antique-gold: var(--theme-accent);
+  --color-burgundy: var(--theme-accent-alt);
+  --color-secondary-brown: var(--theme-brown);
   
   --font-garamond: "Cormorant Garamond", serif;
   --font-sans: "Inter", sans-serif;
@@ -16,12 +38,48 @@
 
 @layer base {
   body {
-    background-color: var(--color-space-dark);
-    color: var(--color-parchment);
+    background-color: var(--theme-bg-primary);
+    color: var(--theme-text-secondary);
     font-family: var(--font-sans);
     margin: 0;
     padding: 0;
     overflow: hidden;
+    transition: background-color 0.8s ease, color 0.8s ease;
+  }
+
+  /* Paper grain texture */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+    /* Ultra-light SVG noise */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  [data-theme="light"] body::before {
+    opacity: 0.03; /* Extremely subtle */
+  }
+
+  /* Atmospheric vignette */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+    background: radial-gradient(circle at center, transparent 40%, rgba(138, 100, 52, 0.08) 100%);
+    mix-blend-mode: multiply;
+  }
+
+  [data-theme="light"] body::after {
+    opacity: 1;
   }
 }
 

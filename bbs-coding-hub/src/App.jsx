@@ -1,4 +1,5 @@
 import { UniverseProvider } from './context/UniverseContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Universe } from './components/universe/Universe';
 import { UniverseHUD } from './components/ui/UniverseHUD';
 import { WorldPanel } from './components/ui/WorldPanel';
@@ -35,15 +36,17 @@ const WorldLayer = () => {
 
 function App() {
   return (
-    <UniverseProvider>
-      <main className="relative w-full h-screen overflow-hidden bg-space-dark text-parchment selection:bg-antique-gold/30 selection:text-ivory">
-        <LoadingScreen />
-        <Universe />
-        <UniverseHUD />
-        <WorldPanel />
-        <WorldLayer />
-      </main>
-    </UniverseProvider>
+    <ThemeProvider>
+      <UniverseProvider>
+        <main className="relative w-full h-screen overflow-hidden bg-space-dark text-parchment selection:bg-antique-gold/30 selection:text-ivory transition-colors duration-1000">
+          <LoadingScreen />
+          <Universe />
+          <UniverseHUD />
+          <WorldPanel />
+          <WorldLayer />
+        </main>
+      </UniverseProvider>
+    </ThemeProvider>
   );
 }
 

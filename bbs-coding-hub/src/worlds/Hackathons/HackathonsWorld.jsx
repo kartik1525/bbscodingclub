@@ -54,7 +54,7 @@ export function HackathonsWorld() {
 
         <div className={`fixed inset-0 z-50 bg-space-dark/95 backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col items-center justify-center ${activeObject ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-24 pointer-events-none'}`}>
           {activeHackathon && (
-            <div className="max-w-4xl w-full mx-auto p-8 md:p-16 h-full flex flex-col overflow-y-auto">
+            <div className="max-w-4xl w-full mx-auto p-8 pt-32 md:p-16 md:pt-40 h-full flex flex-col overflow-y-auto scrollbar-none">
               <button 
                 onClick={closeObject}
                 className="self-start mb-12 group flex items-center gap-3 font-sans text-[10px] tracking-[0.2em] text-parchment hover:text-ivory transition-colors duration-300"

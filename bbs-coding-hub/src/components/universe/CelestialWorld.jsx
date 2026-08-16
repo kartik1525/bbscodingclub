@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useUniverse } from '../../context/UniverseContext';
+import { useTheme } from '../../context/ThemeContext';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -8,9 +9,11 @@ export function CelestialWorld({ world }) {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
   const { focusWorld, activeWorld, interactionLocked } = useUniverse();
+  const { theme } = useTheme();
 
   const isFocused = activeWorld === world.id;
   const isOtherFocused = activeWorld !== null && !isFocused;
+  const isLight = theme === 'light';
 
   useFrame((state, delta) => {
     if (meshRef.current) {
@@ -41,19 +44,25 @@ export function CelestialWorld({ world }) {
 
   return (
     <group position={world.position}>
+      {/* Invisible expanded hit area for mobile */}
       <mesh
-        ref={meshRef}
         onClick={handleClick}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
       >
+        <sphereGeometry args={[0.8, 16, 16]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+
+      {/* Visual planet mesh */}
+      <mesh ref={meshRef}>
         <sphereGeometry args={[0.5, 32, 32]} />
         <meshStandardMaterial
           color={world.color}
           emissive={world.color}
-          emissiveIntensity={hovered && !activeWorld ? 0.3 : 0.05}
-          roughness={0.7}
-          metalness={0.3}
+          emissiveIntensity={hovered && !activeWorld ? (isLight ? 0.15 : 0.3) : (isLight ? 0.0 : 0.05)}
+          roughness={isLight ? 0.85 : 0.7}
+          metalness={isLight ? 0.1 : 0.3}
           transparent
           opacity={isOtherFocused ? 0.15 : 1}
         />

@@ -3,8 +3,10 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Point, Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import { StarField } from '../universe/StarField';
+import { useTheme } from '../../context/ThemeContext';
+import { ChartAnnotations } from '../universe/ChartAnnotations';
 
-function Starfield({ variant, reducedMotion }) {
+function Starfield({ variant, reducedMotion, theme }) {
   const groupRef = useRef();
   
   // Configuration based on variant
@@ -25,7 +27,9 @@ function Starfield({ variant, reducedMotion }) {
     }
   }, [variant]);
 
-
+  const ringColor = theme === 'light' ? '#8E6534' : '#A67C42';
+  const ringColorSecondary = theme === 'light' ? '#5A4A3A' : '#F3E9D2';
+  const pointColor = theme === 'light' ? '#3A2215' : '#5A3825';
 
   return (
     <group ref={groupRef}>
@@ -36,11 +40,11 @@ function Starfield({ variant, reducedMotion }) {
         <>
           <mesh rotation={[Math.PI / 2, 0, 0]}>
             <ringGeometry args={[15, 15.02, 64]} />
-            <meshBasicMaterial color="#A67C42" transparent opacity={0.1} side={THREE.DoubleSide} />
+            <meshBasicMaterial color={ringColor} transparent opacity={0.1} side={THREE.DoubleSide} />
           </mesh>
           <mesh rotation={[Math.PI / 2.5, Math.PI / 6, 0]}>
             <ringGeometry args={[20, 20.02, 64]} />
-            <meshBasicMaterial color="#F3E9D2" transparent opacity={0.05} side={THREE.DoubleSide} />
+            <meshBasicMaterial color={ringColorSecondary} transparent opacity={0.05} side={THREE.DoubleSide} />
           </mesh>
         </>
       )}
@@ -48,7 +52,7 @@ function Starfield({ variant, reducedMotion }) {
       {variant === 'vision' && (
         <Float speed={1} rotationIntensity={0.5} floatIntensity={0.5}>
           <Points limit={500}>
-            <PointMaterial transparent vertexColors size={0.5} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} opacity={0.4} />
+            <PointMaterial transparent vertexColors size={0.5} sizeAttenuation depthWrite={false} blending={theme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending} opacity={0.4} />
             {Array.from({ length: 500 }).map((_, i) => (
               <Point
                 key={i}
@@ -57,7 +61,7 @@ function Starfield({ variant, reducedMotion }) {
                   (Math.random() - 0.5) * 40,
                   (Math.random() - 0.5) * 40
                 ]}
-                color="#5A3825"
+                color={pointColor}
               />
             ))}
           </Points>
@@ -69,6 +73,7 @@ function Starfield({ variant, reducedMotion }) {
 
 export function WorldBackground({ variant = 'default' }) {
   const [reducedMotion, setReducedMotion] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -79,19 +84,22 @@ export function WorldBackground({ variant = 'default' }) {
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
+  const bgColor = theme === 'light' ? '#F5EFEB' : '#120f0c';
+
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-space-dark">
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-space-dark transition-colors duration-1000">
       <Canvas 
         camera={{ position: [0, 0, 15], fov: 60 }} 
-        dpr={[1, 2]} // Optimize pixel ratio
+        dpr={[1, 2]} 
         gl={{ antialias: false, alpha: false, powerPreference: 'high-performance' }}
       >
-        <color attach="background" args={['#120f0c']} /> {/* space-dark #120f0c */}
-        <ambientLight intensity={0.5} />
-        <Starfield variant={variant} reducedMotion={reducedMotion} />
+        <color attach="background" args={[bgColor]} />
+        <ambientLight intensity={theme === 'light' ? 0.8 : 0.5} />
+        <Starfield variant={variant} reducedMotion={reducedMotion} theme={theme} />
       </Canvas>
+      <ChartAnnotations />
       {/* Fallback gradient overlay for blending */}
-      <div className="absolute inset-0 bg-gradient-to-b from-space-dark/20 via-transparent to-space-dark/80 pointer-events-none mix-blend-multiply" />
+      <div className={`absolute inset-0 transition-colors duration-1000 pointer-events-none ${theme === 'light' ? 'bg-gradient-to-b from-[#F5EFEB]/20 via-transparent to-[#F5EFEB]/80 mix-blend-normal' : 'bg-gradient-to-b from-[#120F0C]/20 via-transparent to-[#120F0C]/80 mix-blend-multiply'}`} />
     </div>
   );
 }

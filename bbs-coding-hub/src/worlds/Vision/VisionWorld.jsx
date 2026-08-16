@@ -66,8 +66,8 @@ export function VisionWorld() {
         
         <div className="min-h-screen flex flex-col items-center justify-center p-8 relative">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(166,124,66,0.1)_0%,transparent_70%)] pointer-events-none" />
-          <h1 className="font-garamond text-6xl md:text-8xl text-ivory mb-12 tracking-widest drop-shadow-2xl z-10">OUR VISION</h1>
-          <p className="font-sans text-lg md:text-3xl text-parchment/90 max-w-4xl leading-relaxed z-10 font-light">
+          <h1 className="font-garamond text-[clamp(2.5rem,12vw,6rem)] text-ivory mb-12 tracking-widest drop-shadow-2xl z-10">OUR VISION</h1>
+          <p className="font-sans text-[clamp(1rem,4vw,1.875rem)] text-parchment/90 max-w-4xl leading-relaxed z-10 font-light">
             We want to build a community where students don't just learn technology.
             <br/><br/>
             They <span className="text-antique-gold font-medium italic">build</span> with it.
@@ -84,8 +84,8 @@ export function VisionWorld() {
             </div>
             
             <div className="text-element flex flex-col items-center z-10 opacity-0 translate-y-24">
-              <h2 className="font-garamond text-5xl md:text-8xl text-antique-gold mb-8 tracking-[0.2em]">{stage.title}</h2>
-              <p className="font-sans text-base md:text-2xl text-parchment/80 max-w-2xl leading-relaxed">{stage.text}</p>
+              <h2 className="font-garamond text-[clamp(2rem,10vw,6rem)] text-antique-gold mb-8 tracking-[0.2em]">{stage.title}</h2>
+              <p className="font-sans text-[clamp(1rem,4vw,1.5rem)] text-parchment/80 max-w-2xl leading-relaxed">{stage.text}</p>
             </div>
           </div>
         ))}
@@ -96,7 +96,7 @@ export function VisionWorld() {
           </div>
           <div className="text-element z-10 text-center opacity-0 flex flex-col items-center">
              <div className="w-px h-32 bg-gradient-to-b from-transparent to-antique-gold mx-auto mb-16" />
-             <h2 className="font-garamond text-4xl md:text-7xl text-ivory tracking-[0.15em] leading-[1.3]">
+             <h2 className="font-garamond text-[clamp(2rem,8vw,4.5rem)] text-ivory tracking-[0.15em] leading-[1.3]">
                THE NEXT CHAPTER<br/>IS OURS TO WRITE.
              </h2>
              <div className="w-px h-32 bg-gradient-to-t from-transparent to-antique-gold mx-auto mt-16" />
