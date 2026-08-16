@@ -44,5 +44,16 @@ export const worlds = [
     scale: 0.8,
     color: '#5A3825',
     type: 'about'
+  },
+  {
+    id: 'sih',
+    name: 'SIH',
+    description: 'SIH Internal Hackathon 2K26',
+    introText: 'Information and updates regarding the SIH Internal Hackathon 2K26. Explore problem themes, participation guidelines, and team details.',
+    position: [-4.6, -0.8, 1.2],
+    scale: 1.1,
+    color: '#5A7D87',
+    type: 'sih',
+    featured: true
   }
 ];

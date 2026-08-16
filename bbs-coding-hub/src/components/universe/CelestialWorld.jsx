@@ -7,6 +7,7 @@ import * as THREE from 'three';
 
 export function CelestialWorld({ world }) {
   const meshRef = useRef();
+  const atmosphereRef = useRef();
   const [hovered, setHovered] = useState(false);
   const { focusWorld, activeWorld, interactionLocked } = useUniverse();
   const { theme } = useTheme();
@@ -21,6 +22,28 @@ export function CelestialWorld({ world }) {
       
       const targetScale = hovered && !activeWorld && !interactionLocked ? world.scale * 1.05 : world.scale;
       meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
+    }
+
+    if (world.featured && atmosphereRef.current) {
+      // Extremely subtle, slow breathing shimmer
+      const breath = (Math.sin(state.clock.elapsedTime * 1.2) + 1) * 0.5;
+      const baseOpacity = isLight ? 0.03 : 0.06;
+      const peakOpacity = isLight ? 0.06 : 0.10;
+      const hoverOpacity = isLight ? 0.14 : 0.20;
+
+      const targetOpacity = hovered && !activeWorld
+        ? hoverOpacity
+        : isFocused
+        ? (isLight ? 0.12 : 0.18)
+        : isOtherFocused
+        ? (isLight ? 0.01 : 0.02)
+        : baseOpacity + (peakOpacity - baseOpacity) * breath;
+
+      atmosphereRef.current.material.opacity = THREE.MathUtils.lerp(
+        atmosphereRef.current.material.opacity,
+        targetOpacity,
+        0.08
+      );
     }
   });
 
@@ -54,15 +77,40 @@ export function CelestialWorld({ world }) {
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
+      {/* Featured subtle atmospheric rim glow */}
+      {world.featured && (
+        <mesh ref={atmosphereRef}>
+          <sphereGeometry args={[0.518, 32, 32]} />
+          <meshBasicMaterial
+            color={world.color}
+            transparent
+            opacity={isLight ? 0.04 : 0.07}
+            blending={THREE.AdditiveBlending}
+            side={THREE.BackSide}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
+
       {/* Visual planet mesh */}
       <mesh ref={meshRef}>
         <sphereGeometry args={[0.5, 32, 32]} />
         <meshStandardMaterial
           color={world.color}
           emissive={world.color}
-          emissiveIntensity={hovered && !activeWorld ? (isLight ? 0.15 : 0.3) : (isLight ? 0.0 : 0.05)}
-          roughness={isLight ? 0.85 : 0.7}
-          metalness={isLight ? 0.1 : 0.3}
+          emissiveIntensity={
+            world.featured
+              ? hovered && !activeWorld
+                ? (isLight ? 0.18 : 0.28)
+                : isFocused
+                ? (isLight ? 0.15 : 0.22)
+                : (isLight ? 0.02 : 0.07)
+              : hovered && !activeWorld
+              ? (isLight ? 0.15 : 0.3)
+              : (isLight ? 0.0 : 0.05)
+          }
+          roughness={isLight ? 0.85 : (world.featured ? 0.65 : 0.7)}
+          metalness={isLight ? 0.1 : (world.featured ? 0.25 : 0.3)}
           transparent
           opacity={isOtherFocused ? 0.15 : 1}
         />
@@ -77,7 +125,11 @@ export function CelestialWorld({ world }) {
         }}
       >
         <div className="flex flex-col items-center select-none drop-shadow-md">
-          <div className="font-sans text-xs font-medium tracking-widest text-parchment whitespace-nowrap px-3 py-1.5 bg-space-dark/60 backdrop-blur-md border border-antique-gold/20 rounded">
+          <div className={`font-sans text-xs font-medium tracking-widest whitespace-nowrap px-3 py-1.5 backdrop-blur-md rounded border ${
+            world.featured 
+              ? 'text-ivory bg-space-dark/70 border-antique-gold/40' 
+              : 'text-parchment bg-space-dark/60 border-antique-gold/20'
+          }`}>
             {world.name}
           </div>
           <div 
