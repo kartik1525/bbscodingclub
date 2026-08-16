@@ -13,6 +13,7 @@ import { LearningWorld } from './worlds/Learning/LearningWorld';
 import { CommunityWorld } from './worlds/Community/CommunityWorld';
 import { HackathonsWorld } from './worlds/Hackathons/HackathonsWorld';
 import { AboutWorld } from './worlds/About/AboutWorld';
+import { SIHWorld } from './worlds/SIH/SIHWorld';
 
 const WorldLayer = () => {
   const { isWorldOpen } = useUniverse();
@@ -28,6 +29,7 @@ const WorldLayer = () => {
           <Route path="/community/*" element={<CommunityWorld />} />
           <Route path="/hackathons/*" element={<HackathonsWorld />} />
           <Route path="/about/*" element={<AboutWorld />} />
+          <Route path="/sih/*" element={<SIHWorld />} />
         </Routes>
       </div>
     </div>
