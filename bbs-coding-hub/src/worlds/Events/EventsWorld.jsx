@@ -95,9 +95,16 @@ export function EventsWorld() {
                 <p>More details and schedule will be released soon. Prepare your teams and get ready to build something amazing.</p>
               </div>
 
-              <button className="self-start px-10 py-5 bg-antique-gold/10 border border-antique-gold/40 hover:bg-antique-gold/20 hover:border-antique-gold hover:text-ivory transition-all duration-300 font-sans text-[10px] tracking-[0.2em] text-parchment">
-                REGISTER NOW
-              </button>
+              {activeEvent.status !== 'PAST' && (
+                <a 
+                  href={activeEvent.registerLink || '#'} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="self-start inline-block px-10 py-5 bg-antique-gold/10 border border-antique-gold/40 hover:bg-antique-gold/20 hover:border-antique-gold hover:text-ivory transition-all duration-300 font-sans text-[10px] tracking-[0.2em] text-parchment"
+                >
+                  REGISTER NOW
+                </a>
+              )}
             </div>
           )}
         </div>
