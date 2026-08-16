@@ -36,12 +36,13 @@ export const worlds = [
     type: 'hackathons'
   },
   {
-    id: 'vision',
-    name: 'OUR VISION',
-    description: 'Discover where BBS Coding Club is heading.',
+    id: 'about',
+    name: 'ABOUT',
+    description: 'Discover who we are, why we exist, what we believe, and where we\'re heading.',
+    introText: 'BBS Coding Club is a student-driven technical community built around learning, building, competing and collaborating.',
     position: [3, 2, -3],
     scale: 0.8,
     color: '#5A3825',
-    type: 'vision'
+    type: 'about'
   }
 ];

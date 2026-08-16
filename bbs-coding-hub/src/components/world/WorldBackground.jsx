@@ -20,7 +20,7 @@ function Starfield({ variant, reducedMotion, theme }) {
         return { color: '#F3E9D2', count: 5000, speed: 0.4, fade: false, depth: 60 };
       case 'events':
         return { color: '#A67C42', count: 3500, speed: 0.3, fade: true, depth: 50 };
-      case 'vision':
+      case 'about':
         return { color: '#5A3825', count: 2000, speed: 0.05, fade: true, depth: 70 };
       default:
         return { color: '#A67C42', count: 3000, speed: 0.2, fade: true, depth: 50 };
@@ -47,25 +47,6 @@ function Starfield({ variant, reducedMotion, theme }) {
             <meshBasicMaterial color={ringColorSecondary} transparent opacity={0.05} side={THREE.DoubleSide} />
           </mesh>
         </>
-      )}
-      
-      {variant === 'vision' && (
-        <Float speed={1} rotationIntensity={0.5} floatIntensity={0.5}>
-          <Points limit={500}>
-            <PointMaterial transparent vertexColors size={0.5} sizeAttenuation depthWrite={false} blending={theme === 'light' ? THREE.NormalBlending : THREE.AdditiveBlending} opacity={0.4} />
-            {Array.from({ length: 500 }).map((_, i) => (
-              <Point
-                key={i}
-                position={[
-                  (Math.random() - 0.5) * 40,
-                  (Math.random() - 0.5) * 40,
-                  (Math.random() - 0.5) * 40
-                ]}
-                color={pointColor}
-              />
-            ))}
-          </Points>
-        </Float>
       )}
     </group>
   );
