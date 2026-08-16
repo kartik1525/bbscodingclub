@@ -1,17 +1,31 @@
 import { useUniverse } from '../../context/UniverseContext';
 import { worlds } from '../../data/worlds';
+import { useEffect } from 'react';
 
 export function WorldPanel() {
   const { activeWorld, isPanelOpen, returnToUniverse, enterWorld } = useUniverse();
   
   const world = activeWorld ? worlds.find(w => w.id === activeWorld) : null;
 
+  // Handle ESC key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isPanelOpen && activeWorld) {
+        returnToUniverse();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPanelOpen, activeWorld, returnToUniverse]);
+
   return (
     <div 
-      className={`absolute inset-0 pointer-events-none z-20 flex items-center justify-center md:justify-end p-6 md:p-24 transition-opacity duration-700 ease-in-out ${isPanelOpen && activeWorld ? 'opacity-100' : 'opacity-0'}`}
+      onClick={returnToUniverse}
+      className={`absolute inset-0 z-20 flex items-center justify-center md:justify-end p-6 md:p-24 transition-opacity duration-700 ease-in-out ${isPanelOpen && activeWorld ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
     >
       {world && (
         <div 
+          onClick={(e) => e.stopPropagation()}
           className="pointer-events-auto w-full max-w-md bg-space-dark/80 backdrop-blur-xl border border-antique-gold/20 p-8 md:p-12 transform transition-transform duration-1000 ease-out flex flex-col" 
           style={{ transform: isPanelOpen ? 'translateX(0)' : 'translateX(40px)' }}
         >
