@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@plugin "tailwind-scrollbar";
+
+@theme {
+  --color-space-dark: #120F0C;
+  --color-space-secondary: #211A15;
+  --color-ivory: #F3E9D2;
+  --color-parchment: #D8C7A5;
+  --color-antique-gold: #A67C42;
+  --color-burgundy: #6B2E2E;
+  --color-secondary-brown: #5A3825;
+  
+  --font-garamond: "Cormorant Garamond", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-space-dark);
+    color: var(--color-parchment);
+    font-family: var(--font-sans);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  inset: 0;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@theme {
+  --animate-float: float 6s ease-in-out infinite;
+}
