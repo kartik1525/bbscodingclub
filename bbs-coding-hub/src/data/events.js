@@ -1,35 +1,35 @@
 export const events = [
   {
-    id: 'yukti-2',
-    name: 'YUKTI 2.0',
+    id: 'hacki1',
+    name: 'SIH INTERNAL HACKATHON',
     type: 'HACKATHON',
-    date: '24–25 FEBRUARY 2026',
-    month: 'FEBRUARY',
+    date: '26 AUGUST 2026',
+    month: 'AUGUST',
     year: '2026',
-    description: 'The flagship hackathon of BBS Coding Club. Build, compete, and solve real-world problems over 48 hours of intense coding.',
+    description: 'Build innovative solutions for a better tomorrow. Join hundreds of students to build prototypes that matter.',
     status: 'UPCOMING',
     location: 'Main Auditorium'
   },
   {
-    id: 'web-dev-workshop',
-    name: 'WEB DEV IMMERSION',
+    id: 'MLSTUDY',
+    name: 'ML STUDY JAM',
     type: 'WORKSHOP',
-    date: '15 MARCH 2026',
-    month: 'MARCH',
-    year: '2026',
-    description: 'A complete hands-on workshop covering modern web development from HTML to React.',
-    status: 'UPCOMING',
-    location: 'Lab 3'
+    date: '13 SEPTEMBER 2025',
+    month: 'SEPTEMBER',
+    year: '2025',
+    description: 'A 6 hour long hands-on workshop covering Machine Learning.',
+    status: 'PAST',
+    location: 'CS LAB'
   },
   {
-    id: 'cp-contest',
-    name: 'ALGO STRIKE',
-    type: 'COMPETITION',
-    date: '10 APRIL 2026',
-    month: 'APRIL',
-    year: '2026',
-    description: 'Test your problem-solving skills in our competitive programming contest.',
-    status: 'UPCOMING',
-    location: 'Online'
-  }
+    id: 'GITHUB-workshop',
+    name: 'GITHUB WORKSHOP',
+    type: 'WORKSHOP',
+    date: '29 AUGUST 2025',
+    month: 'AUGUST',
+    year: '2025',
+    description: 'Learn the basics of Git and GitHub for version control.',
+    status: 'PAST',
+    location: 'ONLINE'
+  },
 ];

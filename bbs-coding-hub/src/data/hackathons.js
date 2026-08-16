@@ -26,16 +26,4 @@ export const hackathons = [
     description: 'The inaugural hackathon that started it all. Over 50 teams competed to build smart solutions for the college campus, resulting in several projects adopted by the administration.',
     rules: []
   },
-  {
-    id: 'gdg-workshop',
-    name: 'ML STUDY JAM',
-    theme: 'MACHINE LEARNING',
-    date: '13 SEPTEMBER 2025',
-    status: 'PAST',
-    teamSize: 'Open',
-    eligibility: 'BBS Students',
-    description: 'A 6-hour workshop on Machine Learning.',
-    rules: [
-    ]
-  },
 ];
