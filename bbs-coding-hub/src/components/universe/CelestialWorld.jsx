@@ -8,6 +8,7 @@ import * as THREE from 'three';
 export function CelestialWorld({ world }) {
   const meshRef = useRef();
   const atmosphereRef = useRef();
+  const sihGlowRef = useRef();
   const [hovered, setHovered] = useState(false);
   const { focusWorld, activeWorld, interactionLocked } = useUniverse();
   const { theme } = useTheme();
@@ -44,6 +45,17 @@ export function CelestialWorld({ world }) {
         targetOpacity,
         0.08
       );
+    }
+
+    if (world.id === 'sih' && sihGlowRef.current) {
+      // Orbiting light effect
+      if (!sihGlowRef.current.userData.initialized) {
+        sihGlowRef.current.rotation.x = 0.4; // Tilt the orbit slightly
+        sihGlowRef.current.rotation.z = 0.2;
+        sihGlowRef.current.userData.initialized = true;
+      }
+      sihGlowRef.current.rotation.y -= delta * 1.2; // Orbit speed
+      sihGlowRef.current.visible = !isOtherFocused;
     }
   });
 
@@ -90,6 +102,40 @@ export function CelestialWorld({ world }) {
             depthWrite={false}
           />
         </mesh>
+      )}
+
+      {/* Active Event Orbiting Light for SIH */}
+      {world.id === 'sih' && (
+        <group ref={sihGlowRef}>
+          {/* Faint orbital track */}
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[0.75, 0.755, 64]} />
+            <meshBasicMaterial 
+              color={isLight ? "#5A3825" : "#FDF2B3"} 
+              transparent 
+              opacity={isLight ? 0.15 : 0.2} 
+              side={THREE.DoubleSide} 
+            />
+          </mesh>
+          {/* The orbiting light core */}
+          <mesh position={[0.75, 0, 0]}>
+            <sphereGeometry args={[0.025, 16, 16]} />
+            <meshBasicMaterial
+              color={isLight ? "#5A3825" : "#FDF2B3"}
+            />
+          </mesh>
+          {/* The glow around the orbiting light */}
+          <mesh position={[0.75, 0, 0]}>
+            <sphereGeometry args={[0.08, 16, 16]} />
+            <meshBasicMaterial
+              color={isLight ? "#5A3825" : "#FDF2B3"}
+              transparent
+              opacity={0.4}
+              blending={isLight ? THREE.NormalBlending : THREE.AdditiveBlending}
+              depthWrite={false}
+            />
+          </mesh>
+        </group>
       )}
 
       {/* Visual planet mesh */}
