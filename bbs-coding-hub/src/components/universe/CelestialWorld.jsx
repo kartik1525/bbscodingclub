@@ -111,9 +111,9 @@ export function CelestialWorld({ world }) {
           <mesh rotation={[Math.PI / 2, 0, 0]}>
             <ringGeometry args={[0.75, 0.755, 64]} />
             <meshBasicMaterial 
-              color={isLight ? "#5A3825" : "#FDF2B3"} 
+              color={isLight ? "#3A2215" : "#FFD700"} 
               transparent 
-              opacity={isLight ? 0.15 : 0.2} 
+              opacity={isLight ? 0.3 : 0.2} 
               side={THREE.DoubleSide} 
             />
           </mesh>
@@ -121,16 +121,16 @@ export function CelestialWorld({ world }) {
           <mesh position={[0.75, 0, 0]}>
             <sphereGeometry args={[0.025, 16, 16]} />
             <meshBasicMaterial
-              color={isLight ? "#5A3825" : "#FDF2B3"}
+              color={isLight ? "#1A0F09" : "#FFFF00"}
             />
           </mesh>
           {/* The glow around the orbiting light */}
           <mesh position={[0.75, 0, 0]}>
             <sphereGeometry args={[0.08, 16, 16]} />
             <meshBasicMaterial
-              color={isLight ? "#5A3825" : "#FDF2B3"}
+              color={isLight ? "#3A2215" : "#FFD700"}
               transparent
-              opacity={0.4}
+              opacity={0.6}
               blending={isLight ? THREE.NormalBlending : THREE.AdditiveBlending}
               depthWrite={false}
             />
