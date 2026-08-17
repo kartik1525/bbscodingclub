@@ -4,16 +4,28 @@ import {
   sihInfo, 
   sihAnnouncements, 
   sihTimeline, 
-  sihTracks, 
   sihGuidelines 
 } from '../../data/sih';
+import problemStatements, { problemThemes } from '../../data/problemStatements';
 import { useUniverse } from '../../context/UniverseContext';
 
 export function SIHWorld() {
   const { activeObject, openObject, closeObject } = useUniverse();
-  const [activeTab, setActiveTab] = useState('tracks'); // 'tracks' | 'timeline' | 'guidelines'
+  const [activeTab, setActiveTab] = useState('statements'); // 'statements' | 'timeline' | 'guidelines'
+  const [selectedTheme, setSelectedTheme] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
   
-  const activeTrack = activeObject ? sihTracks.find(t => t.id === activeObject) : null;
+  const activePS = activeObject ? (problemStatements.find(p => p.code === activeObject || String(p.id) === String(activeObject))) : null;
+
+  const filteredStatements = problemStatements.filter(ps => {
+    const matchesTheme = selectedTheme === 'All' || ps.theme === selectedTheme;
+    const matchesSearch = searchQuery.trim() === '' || 
+      ps.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ps.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ps.theme.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ps.background.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesTheme && matchesSearch;
+  });
 
   return (
     <WorldShell title="SIH">
@@ -107,13 +119,13 @@ export function SIHWorld() {
           {/* Navigation Tabs */}
           <div className="flex border-b border-antique-gold/15 mb-10 overflow-x-auto scrollbar-none gap-6 md:gap-10">
             <button
-              onClick={() => setActiveTab('tracks')}
+              onClick={() => setActiveTab('statements')}
               className={`pb-4 font-sans text-[10px] md:text-xs tracking-[0.25em] uppercase transition-all duration-300 relative whitespace-nowrap ${
-                activeTab === 'tracks' ? 'text-ivory font-medium' : 'text-parchment/50 hover:text-parchment'
+                activeTab === 'statements' ? 'text-ivory font-medium' : 'text-parchment/50 hover:text-parchment'
               }`}
             >
-              PROBLEM TRACKS
-              {activeTab === 'tracks' && (
+              PROBLEM STATEMENTS ({problemStatements.length})
+              {activeTab === 'statements' && (
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-antique-gold shadow-[0_0_8px_rgba(216,199,165,0.6)]" />
               )}
             </button>
@@ -143,49 +155,105 @@ export function SIHWorld() {
             </button>
           </div>
 
-          {/* TAB 1: PROBLEM TRACKS */}
-          {activeTab === 'tracks' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {sihTracks.map((track, index) => (
-                <div
-                  key={track.id}
-                  onClick={() => openObject(track.id)}
-                  className="group relative cursor-pointer border border-antique-gold/20 bg-space-dark/60 hover:bg-space-secondary/80 hover:border-antique-gold/50 transition-all duration-500 overflow-hidden flex flex-col h-full shadow-[0_4px_30px_rgba(0,0,0,0.5)] backdrop-blur-md hover:-translate-y-1.5 rounded-sm"
-                  style={{ animationDelay: `${index * 0.15}s` }}
-                >
-                  <div className="p-7 md:p-8 flex-1 flex flex-col">
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="font-sans text-[9px] tracking-[0.2em] text-[#8BBAC7] bg-[#5A7D87]/15 border border-[#5A7D87]/30 px-2.5 py-1 rounded-sm">
-                        {track.category}
-                      </span>
-                      <span className="font-sans text-[8px] tracking-[0.2em] text-antique-gold/70 uppercase">
-                        {track.status}
-                      </span>
-                    </div>
+          {/* TAB 1: PROBLEM STATEMENTS */}
+          {activeTab === 'statements' && (
+            <div className="flex flex-col gap-8">
+              {/* Theme Filter & Search Controls */}
+              <div className="flex flex-col lg:flex-row gap-4 justify-between items-stretch lg:items-center">
+                {/* Theme Filter Pills */}
+                <div className="flex flex-wrap gap-2">
+                  {problemThemes.map((theme) => (
+                    <button
+                      key={theme}
+                      onClick={() => setSelectedTheme(theme)}
+                      className={`px-3 py-1.5 font-sans text-[9px] tracking-[0.15em] uppercase rounded-sm transition-all duration-300 border cursor-pointer ${
+                        selectedTheme === theme
+                          ? 'bg-antique-gold/20 text-antique-gold border-antique-gold/60 shadow-[0_0_10px_rgba(216,199,165,0.2)]'
+                          : 'bg-space-dark/60 text-parchment/60 border-antique-gold/15 hover:border-antique-gold/30 hover:text-parchment'
+                      }`}
+                    >
+                      {theme}
+                    </button>
+                  ))}
+                </div>
 
-                    <h3 className="font-garamond text-2xl md:text-3xl text-ivory mb-3 group-hover:text-antique-gold transition-colors duration-300 leading-snug">
-                      {track.name}
-                    </h3>
+                {/* Search Input */}
+                <div className="relative min-w-[240px]">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="SEARCH PROBLEM STATEMENTS..."
+                    className="w-full bg-space-dark/80 border border-antique-gold/20 focus:border-antique-gold/60 text-ivory placeholder:text-parchment/30 font-sans text-xs px-4 py-2 rounded-sm outline-none transition-colors"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-parchment/50 hover:text-ivory font-sans text-xs cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              </div>
 
-                    <p className="font-sans text-xs text-parchment/75 leading-relaxed mb-6">
-                      {track.summary}
-                    </p>
-
-                    <div className="mt-auto pt-5 border-t border-antique-gold/10 flex flex-wrap gap-2">
-                      {track.topics.slice(0, 3).map((topic, i) => (
-                        <span key={i} className="font-sans text-[9px] tracking-wider text-parchment/60 bg-space-dark/80 px-2 py-1 border border-antique-gold/10">
-                          {topic}
+              {/* Problem Statements Cards Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {filteredStatements.map((ps, index) => (
+                  <div
+                    key={ps.code || ps.id}
+                    onClick={() => openObject(ps.code)}
+                    className="group relative cursor-pointer border border-antique-gold/20 bg-space-dark/60 hover:bg-space-secondary/80 hover:border-antique-gold/50 transition-all duration-500 overflow-hidden flex flex-col h-full shadow-[0_4px_30px_rgba(0,0,0,0.5)] backdrop-blur-md hover:-translate-y-1.5 rounded-sm"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <div className="p-7 md:p-8 flex-1 flex flex-col">
+                      <div className="flex justify-between items-start mb-4">
+                        <span className="font-sans text-[9px] tracking-[0.2em] font-bold text-[#8BBAC7] bg-[#5A7D87]/15 border border-[#5A7D87]/30 px-2.5 py-1 rounded-sm">
+                          {ps.code}
                         </span>
-                      ))}
-                    </div>
+                        <span className="font-sans text-[8px] tracking-[0.2em] text-antique-gold/80 uppercase">
+                          {ps.category}
+                        </span>
+                      </div>
 
-                    <div className="mt-6 flex items-center justify-between font-sans text-[9px] tracking-[0.2em] text-antique-gold/90 group-hover:text-antique-gold">
-                      <span>EXPLORE DETAILS</span>
-                      <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                      <div className="mb-2">
+                        <span className="font-sans text-[9px] tracking-[0.15em] text-antique-gold/70 uppercase">
+                          {ps.theme}
+                        </span>
+                      </div>
+
+                      <h3 className="font-garamond text-2xl md:text-3xl text-ivory mb-3 group-hover:text-antique-gold transition-colors duration-300 leading-snug">
+                        {ps.title}
+                      </h3>
+
+                      <p className="font-sans text-xs text-parchment/75 leading-relaxed mb-6 line-clamp-3">
+                        {ps.background}
+                      </p>
+
+                      <div className="mt-auto pt-5 border-t border-antique-gold/10 flex flex-wrap gap-2">
+                        <span className="font-sans text-[9px] tracking-wider text-parchment/60 bg-space-dark/80 px-2 py-1 border border-antique-gold/10">
+                          {ps.expectedOutcome.length} Expected Outcomes
+                        </span>
+                        <span className="font-sans text-[9px] tracking-wider text-parchment/60 bg-space-dark/80 px-2 py-1 border border-antique-gold/10">
+                          {ps.constraints.length} Constraints
+                        </span>
+                      </div>
+
+                      <div className="mt-6 flex items-center justify-between font-sans text-[9px] tracking-[0.2em] text-antique-gold/90 group-hover:text-antique-gold">
+                        <span>EXPLORE FULL DETAILS</span>
+                        <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+
+              {filteredStatements.length === 0 && (
+                <div className="text-center py-16 bg-space-dark/40 border border-antique-gold/15 rounded-sm">
+                  <p className="font-garamond text-2xl text-ivory mb-2">No problem statements found</p>
+                  <p className="font-sans text-xs text-parchment/60">Try adjusting your search query or theme filter</p>
                 </div>
-              ))}
+              )}
             </div>
           )}
 
@@ -278,14 +346,14 @@ export function SIHWorld() {
 
         </div>
 
-        {/* Detail Modal View for Track Items */}
+        {/* Detail Modal View for Problem Statement Items */}
         <div 
           className={`fixed inset-0 z-50 bg-space-dark/95 backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col items-center justify-center ${
             activeObject ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-20 pointer-events-none'
           }`}
         >
-          {activeTrack && (
-            <div className="max-w-4xl w-full mx-auto p-6 pt-28 md:p-14 md:pt-36 h-full flex flex-col overflow-y-auto scrollbar-none">
+          {activePS && (
+            <div className="max-w-4xl w-full mx-auto p-6 pt-24 md:p-14 md:pt-32 h-full flex flex-col overflow-y-auto scrollbar-none">
               
               <button 
                 onClick={closeObject}
@@ -295,42 +363,76 @@ export function SIHWorld() {
                 BACK TO SIH
               </button>
 
-              <div className="flex gap-4 items-center mb-4">
+              <div className="flex flex-wrap gap-3 items-center mb-4">
                 <span className="px-3 py-1 text-[9px] tracking-[0.2em] font-sans font-bold bg-[#5A7D87]/20 text-[#8BBAC7] border border-[#5A7D87]/40 rounded-sm">
-                  {activeTrack.category}
+                  {activePS.code}
+                </span>
+                <span className="px-3 py-1 text-[9px] tracking-[0.2em] font-sans font-bold bg-space-secondary/40 text-antique-gold border border-antique-gold/30 rounded-sm">
+                  {activePS.category}
                 </span>
                 <div className="h-px bg-antique-gold/30 flex-1 max-w-[120px]" />
                 <span className="font-sans text-[9px] tracking-[0.2em] text-antique-gold uppercase font-medium">
-                  {activeTrack.status}
+                  {activePS.theme}
                 </span>
               </div>
 
-              <h1 className="font-garamond text-4xl md:text-6xl text-ivory mb-6 leading-tight">
-                {activeTrack.name}
+              <h1 className="font-garamond text-3xl md:text-5xl lg:text-6xl text-ivory mb-8 leading-tight">
+                {activePS.title}
               </h1>
 
-              <div className="mb-10">
-                <h3 className="font-garamond text-2xl text-ivory mb-4">Track Overview</h3>
-                <p className="font-sans text-sm md:text-base text-parchment/85 leading-relaxed">
-                  {activeTrack.description}
-                </p>
-              </div>
-
-              <div className="mb-12">
-                <h3 className="font-garamond text-2xl text-ivory mb-4">Example Domains & Focus Areas</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {activeTrack.topics.map((t, idx) => (
-                    <div key={idx} className="p-4 bg-space-secondary/25 border border-antique-gold/15 rounded-sm flex items-center gap-3 font-sans text-xs text-parchment/90">
-                      <span className="text-antique-gold">✦</span>
-                      <span>{t}</span>
-                    </div>
-                  ))}
+              {/* Background */}
+              {activePS.background && (
+                <div className="mb-8 bg-space-secondary/20 border border-antique-gold/15 p-6 md:p-8 rounded-sm">
+                  <h3 className="font-garamond text-2xl text-ivory mb-3">Background</h3>
+                  <p className="font-sans text-sm md:text-base text-parchment/85 leading-relaxed whitespace-pre-line">
+                    {activePS.background}
+                  </p>
                 </div>
-              </div>
+              )}
+
+              {/* Detailed Problem */}
+              {activePS.detailedProblem && (
+                <div className="mb-8 bg-space-secondary/20 border border-antique-gold/15 p-6 md:p-8 rounded-sm">
+                  <h3 className="font-garamond text-2xl text-ivory mb-3">Detailed Problem</h3>
+                  <p className="font-sans text-sm md:text-base text-parchment/85 leading-relaxed whitespace-pre-line">
+                    {activePS.detailedProblem}
+                  </p>
+                </div>
+              )}
+
+              {/* Expected Outcome */}
+              {activePS.expectedOutcome && activePS.expectedOutcome.length > 0 && (
+                <div className="mb-8">
+                  <h3 className="font-garamond text-2xl text-ivory mb-4">Expected Outcome</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {activePS.expectedOutcome.map((outcome, idx) => (
+                      <div key={idx} className="p-4 bg-space-secondary/25 border border-antique-gold/15 rounded-sm flex items-start gap-3 font-sans text-xs text-parchment/90 leading-relaxed">
+                        <span className="text-antique-gold mt-0.5 shrink-0">✦</span>
+                        <span>{outcome}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Constraints */}
+              {activePS.constraints && activePS.constraints.length > 0 && (
+                <div className="mb-12">
+                  <h3 className="font-garamond text-2xl text-ivory mb-4">Constraints</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {activePS.constraints.map((constraint, idx) => (
+                      <div key={idx} className="p-4 bg-space-secondary/25 border border-antique-gold/15 rounded-sm flex items-start gap-3 font-sans text-xs text-parchment/90 leading-relaxed">
+                        <span className="text-[#8BBAC7] mt-0.5 shrink-0">❖</span>
+                        <span>{constraint}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="mt-auto pt-8 border-t border-antique-gold/15 flex flex-wrap gap-4 items-center justify-between">
                 <div className="font-sans text-[9px] tracking-[0.2em] text-parchment/60">
-                  PREPARE YOUR 6-MEMBER TEAM PROPOSAL
+                  PREPARE YOUR 6-MEMBER TEAM PROPOSAL FOR {activePS.code}
                 </div>
                 <button 
                   onClick={closeObject}
